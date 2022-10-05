@@ -1,3 +1,5 @@
+[![mytask](https://github.com/aimark/hexlet-ci-app/actions/workflows/mytask.yml/badge.svg)](https://github.com/aimark/hexlet-ci-app/actions/workflows/mytask.yml)
+
 # Example app for CI Hexlet course
 
 Starting boilerplate of [Strapi](https://strapi.io/) application
