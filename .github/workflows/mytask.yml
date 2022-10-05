@@ -6,23 +6,35 @@ jobs:
   # их может быть больше одного
   build:
     # разные операционные системы для работы воркфлоу
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
+      # Node versions list
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        node-version: [14.x]
     steps: # список шагов, которые надо выполнить
-      # экшен, выполняет какую-то задачу
-      # checkout – клонирует репозиторий
+      # Check-out repository under GitHub workspace
+        # https://github.com/actions/checkout
       - uses: actions/checkout@v2
-      # run – произвольная bash-команда
-      # Устанавливаем Node.js
-      - uses: actions/setup-node@v1
-      # Ставим зависимости
-      - run: npm install
-      # Запускаем линтер
-      - run: npm run lint
-      # Запускаем тесты
-      # у шагов может быть имя, иногда это помогает отладке
-      # имя выводится на Github при просмотре сборки
-      - name: run tests
-        run: npm test # name и run относятся к одной задаче, поэтому дефис ставится только перед name
+        # Step's name
+      - name: Use Node.js ${{ matrix.node-version }}
+        # Configures the node version used on GitHub-hosted runners
+        # https://github.com/actions/setup-node
+        uses: actions/setup-node@v2
+        # The Node.js version to configure
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+      - run: make install
+      - run: make lint
+      - run: make test
+      # - name: Test & publish code coverage
+      #   # Publish code coverage on Code Climate
+      #   # https://github.com/paambaati/codeclimate-action
+      #   uses: paambaati/codeclimate-action@v3.0.0
+      #   # Add Code Climate secret key
+      #   env:
+      #     CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      #   with:
+      #     coverageCommand: make test-coverage
+      #     debug: true
+      # name и run относятся к одной задаче, поэтому дефис ставится только перед name
